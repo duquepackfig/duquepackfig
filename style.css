@@ -61,3 +61,13 @@
     .age-accept{min-width:270px}
     .age-accept:disabled{background:#303a35;color:#f2f2ed;border-color:#596c62;opacity:1}
     @media(max-width:520px){.age-accept{min-width:0}}
+
+    /* Nove packs: cinco na primeira linha e quatro centralizados na segunda. */
+    @media(min-width:1101px){
+      .secondary-grid{grid-template-columns:repeat(10,minmax(0,1fr))}
+      .secondary-grid .product-card{grid-column:span 2}
+      .secondary-grid .product-card:nth-child(6){grid-column:2 / span 2}
+    }
+    @media(min-width:521px) and (max-width:760px){
+      .secondary-grid .product-card:last-child{grid-column:1 / -1;width:calc((100% - 14px)/2);justify-self:center}
+    }
