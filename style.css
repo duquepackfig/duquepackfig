@@ -65,7 +65,8 @@
     /* Nove packs: cinco na primeira linha e quatro centralizados na segunda. */
     @media(min-width:1101px){
       .secondary-grid{grid-template-columns:repeat(10,minmax(0,1fr))}
-      .secondary-grid .product-card{grid-column:span 2}
+      .secondary-grid .product-card,
+      .secondary-grid .product-card:nth-last-child(2){grid-column:span 2}
       .secondary-grid .product-card:nth-child(6){grid-column:2 / span 2}
     }
     @media(min-width:521px) and (max-width:760px){
