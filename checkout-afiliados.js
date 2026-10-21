@@ -29,4 +29,27 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', connectButtons, { once: true });
   else connectButtons();
+
+  // Apenas identificadores aleatórios; sem email, telefone ou dados da compra.
+  try {
+    if (navigator.doNotTrack === '1' || navigator.globalPrivacyControl === true) return;
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    let visitorId = localStorage.getItem('duque-audience-visitor');
+    if (!uuid.test(visitorId || '')) {
+      visitorId = crypto.randomUUID();
+      localStorage.setItem('duque-audience-visitor', visitorId);
+    }
+    let previous;
+    try { previous = JSON.parse(localStorage.getItem('duque-audience-visit') || 'null'); } catch {}
+    const now = Date.now();
+    const age = now - previous?.seenAt;
+    const visitId = uuid.test(previous?.id || '') && Number.isFinite(age) && age >= 0 && age < 30 * 60 * 1000
+      ? previous.id : crypto.randomUUID();
+    localStorage.setItem('duque-audience-visit', JSON.stringify({ id: visitId, seenAt: now }));
+    fetch(new URL('/api/visit', checkout).href, {
+      method: 'POST', credentials: 'omit', keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify({ visitorId, visitId })
+    }).catch(() => {});
+  } catch { /* Falhas no contador não interrompem a compra. */ }
 })();
